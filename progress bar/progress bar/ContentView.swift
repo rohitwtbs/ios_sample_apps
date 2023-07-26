@@ -16,30 +16,23 @@ struct ContentView: View {
         animation: .default)
     private var items: FetchedResults<Item>
 
+    @State private var progress = 0.1
+ 
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+        ProgressView(value: progress,
+                     label: { Text("Processing...") },
+                     currentValueLabel: { Text(progress.formatted(.percent.precision(.fractionLength(0)))) })
+            .padding()
+            .task {
+                Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+ 
+                    self.progress += 0.3
+ 
+                    if self.progress > 1.0 {
+                        self.progress = 0.0
                     }
                 }
             }
-            Text("Select an item")
-        }
     }
 
     private func addItem() {
