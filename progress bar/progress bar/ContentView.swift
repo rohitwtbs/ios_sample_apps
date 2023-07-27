@@ -19,20 +19,22 @@ struct ContentView: View {
     @State private var progress = 0.1
  
     var body: some View {
-        ProgressView(value: progress,
-                     label: { Text("Processing...") },
-                     currentValueLabel: { Text(progress.formatted(.percent.precision(.fractionLength(0)))) })
-            .padding()
+        VStack{
+            ProgressView(value: progress,
+                         label: { Text("Processing...") },
+                         currentValueLabel: { Text(progress.formatted(.percent.precision(.fractionLength(0)))) })
+            .padding(20)
             .task {
                 Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
- 
+                    
                     self.progress += 0.3
- 
+                    
                     if self.progress > 1.0 {
                         self.progress = 0.0
                     }
                 }
             }
+        }
     }
 
     private func addItem() {
